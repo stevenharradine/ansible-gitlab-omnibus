@@ -1,0 +1,21 @@
+---
+- name: Download GitLab omnibus repo setup
+  get_url:
+    url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
+    dest: /tmp/gitlab.sh
+
+- name: Execute GitLab omnibus repo installer
+  command: bash /tmp/gitlab.sh
+
+- name: Install software | apt
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - htop
+    - postfix
+    - gitlab-ce
+
+- name: Start GitLab
+  command: gitlab-ctl reconfigure
